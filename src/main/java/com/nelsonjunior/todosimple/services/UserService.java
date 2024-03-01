@@ -7,19 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nelsonjunior.todosimple.models.User;
-import com.nelsonjunior.todosimple.repositories.TaskRepository;
 import com.nelsonjunior.todosimple.repositories.UserRepository;
-
-
 
 @Service
 public class UserService {
     
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
 
     // Inicio do CRUD
 
@@ -31,12 +25,10 @@ public class UserService {
     }
 
     // Criar um novo usuário
-    @SuppressWarnings("null")
     @Transactional // utilizado para caso for salvar algo no banco, por exemplo, create e update
     public User create(User obj){
         obj.setId(null); // garantir que ta criando um novo
         obj = this.userRepository.save(obj);
-        this.taskRepository.saveAll(obj.getTasks());
         return obj;
     }
 
@@ -58,8 +50,6 @@ public class UserService {
             throw new RuntimeException("Não é possível excluir! Pois há tasks relacionadas!");
         }
     }
-
-
 
 
 }
