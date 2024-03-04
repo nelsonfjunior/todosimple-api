@@ -34,7 +34,7 @@ public class UserService {
 
     // Atualizar um usuário ja existente
     @Transactional
-    private User update(User obj){
+    public User update(User obj){
         User newObj = findById(obj.getId()); // pra ve se existe esse usuario 
         newObj.setPassword(obj.getPassword());
         return this.userRepository.save(newObj);
