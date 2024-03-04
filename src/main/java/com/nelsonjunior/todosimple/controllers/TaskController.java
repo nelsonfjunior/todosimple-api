@@ -2,8 +2,10 @@ package com.nelsonjunior.todosimple.controllers;
 
 import java.net.URI;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,59 +17,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.nelsonjunior.todosimple.models.User;
-import com.nelsonjunior.todosimple.models.User.CreateUser;
-import com.nelsonjunior.todosimple.models.User.UpdateUser;
-import com.nelsonjunior.todosimple.services.UserService;
+import com.nelsonjunior.todosimple.models.Task;
+import com.nelsonjunior.todosimple.services.TaskService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/task")
 @Validated
-public class UserController {
+public class TaskController {
     
     @Autowired
-    private UserService userService;
+    private TaskService taskService;
 
-    // localhost:8080/user/1
+
+
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id){
-
-        User obj =this.userService.findById(id);
+    public ResponseEntity<Task> findById(@PathVariable Long id) {
+        
+        Task obj = taskService.findById(id);
         return ResponseEntity.ok().body(obj);
 
     }
 
-    @PostMapping
-    @Validated(CreateUser.class)
-    public ResponseEntity<Void> create(@Valid @RequestBody User obj){
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Task>> findAllByUserId(@PathVariable Long userId){
 
-        this.userService.create(obj);
+        List<Task> objs = this.taskService.findAllByUserId(userId);
+        return ResponseEntity.ok().body(objs); 
+
+    }
+
+    @PostMapping
+    @Validated
+    public ResponseEntity<Void> create(@Valid @RequestBody Task obj) {
+
+        this.taskService.create(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri(); //ver como funciona melhor isso (20 min aula 11)
         return ResponseEntity.created(uri).build();
 
     }
 
     @PutMapping("/{id}")
-    @Validated(UpdateUser.class)
-    public ResponseEntity<Void> update(@Valid @RequestBody User obj, @PathVariable Long id){
+    @Validated
+    public ResponseEntity<Void> update(@Valid @RequestBody Task obj, @PathVariable Long id){
 
         obj.setId(id);
-        this.userService.update(obj);
-        return ResponseEntity.noContent().build(); // no content para nao retornar nada no body
-
+        this.taskService.update(obj);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
+    @Validated
+    public ResponseEntity<Void> delete(@Valid @PathVariable Long id){
 
-        this.userService.delete(id);
-        return ResponseEntity.noContent().build(); 
-        
+        this.taskService.delete(id);
+        return ResponseEntity.noContent().build();
+
     }
 
-
-
+    
 
 }

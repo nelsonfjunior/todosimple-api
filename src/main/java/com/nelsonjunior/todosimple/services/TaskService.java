@@ -1,5 +1,6 @@
 package com.nelsonjunior.todosimple.services;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -28,6 +29,11 @@ public class TaskService {
         @SuppressWarnings("null")
         Optional<Task> task = taskRepository.findById(id);
         return task.orElseThrow(()-> new RuntimeException("Task não encontrada! " + id + ", Tipo: " + Task.class.getName()));
+    }
+
+    public List<Task> findAllByUserId(Long userId) {
+        List<Task> tasks = this.taskRepository.findByUser_Id(userId);
+        return tasks;
     }
 
     // Criar uma nova task
