@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nelsonjunior.todosimple.models.User;
 import com.nelsonjunior.todosimple.repositories.UserRepository;
+import com.nelsonjunior.todosimple.services.exceptions.DataBindingViolationException;
+import com.nelsonjunior.todosimple.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class UserService {
@@ -21,7 +23,7 @@ public class UserService {
     public User findById(Long id) {
         @SuppressWarnings("null")
         Optional<User> user = this.userRepository.findById(id);
-        return user.orElseThrow(()-> new RuntimeException("Usuário não encontrado! " + id + ", Tipo: " + User.class.getName())); // nao para o programa caso tenha uma excecao
+        return user.orElseThrow(()-> new ObjectNotFoundException("Usuário não encontrado! " + id + ", Tipo: " + User.class.getName())); // nao para o programa caso tenha uma excecao
     }
 
     // Criar um novo usuário
@@ -47,7 +49,7 @@ public class UserService {
         try {
             this.userRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possível excluir! Pois há tasks relacionadas!");
+            throw new DataBindingViolationException("Não é possível excluir! Pois há tasks relacionadas!");
         }
     }
 
