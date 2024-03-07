@@ -12,13 +12,11 @@ public enum ProfileEnum {
     ADMIN(1, "ROLE_ADMIN"),
     USER(2, "ROLE_USER");
 
-
     private Integer code;
     private String description;
 
-
     public static ProfileEnum toEnum(Integer code){
-        
+
         if(Objects.isNull(code)){
             return null;
         }

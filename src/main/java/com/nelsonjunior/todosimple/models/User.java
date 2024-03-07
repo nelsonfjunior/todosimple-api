@@ -69,7 +69,7 @@ public class User {
     @JsonProperty(access = Access.WRITE_ONLY) // nao mostrar pro usuario qual e o perfil dele
     @CollectionTable(name = "user_profile")
     @Column(name = "profile", nullable = false)
-    private Set<Integer> profiles = new HashSet<>();
+    private Set<Integer> profiles = new HashSet<>(); //uma lista que nao pode repetir elementos
 
 
     public Set<ProfileEnum> getProfiles() {
