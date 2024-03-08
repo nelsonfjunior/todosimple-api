@@ -19,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.nelsonjunior.todosimple.security.JWTAuthenticationFilter;
+import com.nelsonjunior.todosimple.security.JWTAuthorizationFilter;
 import com.nelsonjunior.todosimple.security.JWTUtil;
 
 @SuppressWarnings("deprecation")
@@ -58,7 +60,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
             .requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
             .requestMatchers(PUBLIC_MATCHERS).permitAll()
-            .anyRequest().authenticated();
+            .anyRequest().authenticated().and()
+            .authenticationManager(authenticationManager);
+
+        http.addFilter(new JWTAuthenticationFilter(this.authenticationManager, this.jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(this.authenticationManager, this.jwtUtil, this.userDetailsService));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
